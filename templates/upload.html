@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Admin</title>
+</head>
+<body>
+<h4>Upload form</h4>
+<form action="/upload" method="POST" enctype="multipart/form-data">
+	photo: <input type="file" name="file">	
+	<input type="submit" value="login">
+	<input type="hidden" name="token" value="{{.}}">
+</form>
+
+</body>
+</html>
