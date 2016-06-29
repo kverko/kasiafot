@@ -4,13 +4,11 @@
 </head>
 <body>
 <h4>Login form</h4>
-
-<form action="/admin" method="POST">
-	user: <input type="text" name="user">
-	pass: <input type="password" name="pass">
-	<input type="submit" value="login">
+<form action="/admin/" method="POST">
+	<br><label for="user">user:</label><input type="text" name="user">
+	<br><label for="pass">pass:</label><input type="password" name="pass">
+	<br><input type="submit" value="login">
 	<input type="hidden" name="token" value="{{.}}">
 </form>
-<br><a href="/upload">Upload</a>
 </body>
 </html>
