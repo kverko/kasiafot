@@ -1,14 +1,12 @@
+<!DOCTYPE html>
 <html>
-<head>
-<title>Admin</title>
-</head>
-<body>
-<h4>Login form</h4>
-<form action="/admin/" method="POST">
-	<br><label for="user">user:</label><input type="text" name="user">
-	<br><label for="pass">pass:</label><input type="password" name="pass">
-	<br><input type="submit" value="login">
-	<input type="hidden" name="token" value="{{.}}">
-</form>
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+	
+  </head>
+  <body>
+    <h5>Strona admina</h5>
+	<h6>{{ .sid }}</h6>
+  </body>
 </html>
