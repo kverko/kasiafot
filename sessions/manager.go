@@ -19,6 +19,14 @@ type Manager struct {
 	Sessions   map[string]Session
 }
 
+func NewManager(cookieName string, lifetime int64) *Manager {
+	newman := new(Manager)
+	newman.CookieName = cookieName
+	newman.Lifetime = lifetime
+	newman.Sessions = make(map[string]Session, 0)
+	return newman
+}
+
 func (manager *Manager) sessionId() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {

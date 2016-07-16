@@ -7,15 +7,10 @@ import (
 	"github.com/kverko/kasiafot/sessions"
 )
 
-var sesMan *sessions.Manager
+var globalSesMan *sessions.Manager
 
 func main() {
-	sesMan = &sessions.Manager{
-		CookieName: "sessid",
-		Lifetime:   0,
-		Sessions:   make(map[string]sessions.Session, 0),
-	}
-	setHttpHandlers()
+	globalSesMan = sessions.NewManager("sessid", 0)
 	fmt.Println("starting server on port 8888")
 	http.ListenAndServe(":8888", nil)
 }

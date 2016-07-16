@@ -6,7 +6,11 @@ import (
 	"net/http"
 )
 
-func setHttpHandlers() {
+func init() {
+	setRouters()
+}
+
+func setRouters() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/admin", MustLogin(admin))
 	http.HandleFunc("/admin/login", login)
@@ -45,7 +49,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/admin/login", 302)
 			return
 		}
-		_, err = sesMan.SessionStart(w, r)
+		_, err = globalSesMan.SessionStart(w, r)
 		if err != nil {
 			log.Fatal("login router: couldn't start session")
 		}
