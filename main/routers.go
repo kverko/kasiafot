@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,6 +15,7 @@ func setRouters() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/admin", MustLogin(admin))
 	http.HandleFunc("/admin/login", login)
+	http.HandleFunc("/admin/logout", logout)
 	http.HandleFunc("/admin/list-tags", MustLogin(list_tags))
 }
 
@@ -28,8 +30,19 @@ func admin(w http.ResponseWriter, r *http.Request) {
 }
 
 func list_tags(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("sessions:", globalSesMan.Sessions)
 	t, _ := template.ParseFiles("../templates/list-tags.html")
 	t.Execute(w, nil)
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	sid, err := globalSesMan.SessionId(r)
+	if err != nil {
+		fmt.Println("logout: couldn't retrieve current session id")
+	}
+	globalSesMan.RemoveSession(sid)
+	fmt.Println("sessions:", globalSesMan.Sessions)
+	http.Redirect(w, r, "/admin/login", 302)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
@@ -49,7 +62,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/admin/login", 302)
 			return
 		}
-		_, err = globalSesMan.SessionStart(w, r)
+		err = globalSesMan.SessionStart(w, r)
 		if err != nil {
 			log.Fatal("login router: couldn't start session")
 		}
