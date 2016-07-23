@@ -30,7 +30,6 @@ func admin(w http.ResponseWriter, r *http.Request) {
 }
 
 func list_tags(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("sessions:", globalSesMan.Sessions)
 	t, _ := template.ParseFiles("../templates/list-tags.html")
 	t.Execute(w, nil)
 }
@@ -41,7 +40,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("logout: couldn't retrieve current session id")
 	}
 	globalSesMan.RemoveSession(sid)
-	fmt.Println("sessions:", globalSesMan.Sessions)
+	globalSesMan.DelSessionCookie(w, r)
 	http.Redirect(w, r, "/admin/login", 302)
 }
 

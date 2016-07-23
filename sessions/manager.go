@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"sync"
+	"time"
 )
 
 type Manager struct {
@@ -45,11 +46,11 @@ func (manager *Manager) SessionStart(w http.ResponseWriter, r *http.Request) err
 	} else {
 		sid, err := url.QueryUnescape(cookie.Value)
 		if err != nil {
-			err = fmt.Errorf("Session manager: couldn't decode cookie: %s", manager.CookieName)
+			err = fmt.Errorf("Session manager: couldn't decode cookie: %s\n", manager.CookieName)
 		}
 
 		if ok := manager.sessionExists(sid); !ok {
-			err = fmt.Errorf("Session manager: session of sid: %s not found", sid)
+			err = fmt.Errorf("Session manager: session of sid: %s not found\n", sid)
 		}
 	}
 	return err
@@ -73,6 +74,16 @@ func (manager *Manager) RemoveSession(sid string) {
 			manager.Sessions = append(manager.Sessions[:k], manager.Sessions[k+1:]...)
 		}
 	}
+}
+
+func (manager *Manager) DelSessionCookie(w http.ResponseWriter, r *http.Request) error {
+	cookie, err := r.Cookie(manager.CookieName)
+	if (err != nil && err == http.ErrNoCookie) || cookie.Value == "" {
+		return nil
+	}
+	deadCookie := http.Cookie{Name: manager.CookieName, Value: "", Expires: time.Now(), MaxAge: -1}
+	http.SetCookie(w, &deadCookie)
+	return err
 }
 
 func (manager *Manager) IsLoggedIn(r *http.Request) bool {
