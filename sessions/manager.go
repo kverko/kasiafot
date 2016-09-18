@@ -50,7 +50,7 @@ func (manager *Manager) SessionStart(w http.ResponseWriter, r *http.Request) err
 	cookie, err := r.Cookie(manager.CookieName)
 
 	if err != nil || cookie.Value == "" {
-		sid := manager.sessionID()
+		sid := manager.newSessionID()
 		cookie := http.Cookie{Name: manager.CookieName, Value: url.QueryEscape(sid), MaxAge: int(manager.Lifetime), HttpOnly: true}
 		http.SetCookie(w, &cookie)
 		err = manager.SessionInit(sid)
@@ -125,7 +125,8 @@ func (manager *Manager) sessionExists(sid string) bool {
 	return false
 }
 
-func (manager *Manager) sessionID() string {
+//create new sess id
+func (manager *Manager) newSessionID() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
 		return ""
