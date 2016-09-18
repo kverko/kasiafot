@@ -40,7 +40,7 @@ func (manager *Manager) SessionStart(w http.ResponseWriter, r *http.Request) err
 
 	if err != nil || cookie.Value == "" {
 		sid := manager.sessionId()
-		cookie := http.Cookie{Name: manager.CookieName, Value: url.QueryEscape(sid), MaxAge: int(manager.Lifetime)}
+		cookie := http.Cookie{Name: manager.CookieName, Value: url.QueryEscape(sid), MaxAge: int(manager.Lifetime), HttpOnly: true}
 		http.SetCookie(w, &cookie)
 		err = manager.SessionInit(sid)
 	} else {
