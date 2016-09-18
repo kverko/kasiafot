@@ -12,13 +12,6 @@ import (
 	"time"
 )
 
-//SessionsManager to rule all sessions
-var SessionsManager *Manager
-
-// func init() {
-// 	SessionManager = NewManager("sessid", 0)
-// }
-
 //Manager - struct to keep session ids related to session cookie with given CookieName
 type Manager struct {
 	lock       sync.Mutex
