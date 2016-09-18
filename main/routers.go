@@ -35,7 +35,7 @@ func list_tags(w http.ResponseWriter, r *http.Request) {
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	sid, err := globalSesMan.SessionId(r)
+	sid, err := globalSesMan.SessionID(r)
 	if err != nil {
 		fmt.Println("logout: couldn't retrieve current session id")
 	}
