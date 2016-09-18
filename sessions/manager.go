@@ -110,7 +110,6 @@ func (manager *Manager) IsLoggedIn(r *http.Request) bool {
 	}
 
 	if sid, _ := manager.SessionID(r); !manager.sessionExists(sid) {
-		fmt.Println("-- no such session in this manager--", sid, manager)
 		return false
 	}
 

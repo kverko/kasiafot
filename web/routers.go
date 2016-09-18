@@ -6,8 +6,6 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-
-	"github.com/kverko/kasiafot/sessions"
 )
 
 var (
@@ -23,36 +21,31 @@ func setRouters() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--home--")
 	t, _ := template.ParseFiles(filepath.Join(templatePath, "home.html"))
 	t.Execute(w, nil)
 }
 
 func admin(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--admin--")
 	t, _ := template.ParseFiles(filepath.Join(templatePath, "admin.html"))
 	t.Execute(w, nil)
 }
 
 func listTags(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--listTags--")
 	t, _ := template.ParseFiles(filepath.Join(templatePath, "list-tags.html"))
 	t.Execute(w, nil)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--logging out--")
-	sid, err := sessions.SessionsManager.SessionID(r)
+	sid, err := sessionsManager.SessionID(r)
 	if err != nil {
 		fmt.Println("logout: couldn't retrieve current session id")
 	}
-	sessions.SessionsManager.RemoveSession(sid)
-	sessions.SessionsManager.DelSessionCookie(w, r)
+	sessionsManager.RemoveSession(sid)
+	sessionsManager.DelSessionCookie(w, r)
 	http.Redirect(w, r, "/admin/login", 302)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("--login--")
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles(filepath.Join(templatePath, "login.html"))
 		t.Execute(w, nil)
@@ -68,7 +61,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/admin/login", 302)
 			return
 		}
-		err = sessions.SessionsManager.SessionStart(w, r)
+		err = sessionsManager.SessionStart(w, r)
 		if err != nil {
 			log.Fatal("login router: couldn't start session")
 		}
