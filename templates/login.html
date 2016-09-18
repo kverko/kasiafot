@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Admin - login</title>
+  </head>
+  <body>
+    <h5>Strona admina - logowanie</h5>
+    <form method="POST" action="/admin/login">
+	    <br /><label for="username">Login</label>
+	    <input type="text" name="username" />
+	    <br /><label for="password">Password</label>
+	    <input type="password" name="password" />
+	    <br /><input type="submit" name="Submit" value="Send" />
+		<input type="hidden" name="ct" value="{{.}}">
+    </form>
+  </body>
+</html>
