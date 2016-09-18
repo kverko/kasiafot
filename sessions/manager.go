@@ -12,6 +12,13 @@ import (
 	"time"
 )
 
+//SessionsManager to rule all sessions
+var SessionsManager *Manager
+
+// func init() {
+// 	SessionManager = NewManager("sessid", 0)
+// }
+
 //Manager - struct to keep session ids related to session cookie with given CookieName
 type Manager struct {
 	lock       sync.Mutex
@@ -103,6 +110,7 @@ func (manager *Manager) IsLoggedIn(r *http.Request) bool {
 	}
 
 	if sid, _ := manager.SessionID(r); !manager.sessionExists(sid) {
+		fmt.Println("-- no such session in this manager--", sid, manager)
 		return false
 	}
 

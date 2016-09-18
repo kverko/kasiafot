@@ -1,53 +1,60 @@
-package main
+package web
 
 import (
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
+
+	"github.com/kverko/kasiafot/sessions"
 )
 
-func init() {
-	setRouters()
-}
+var (
+	templatePath = "./templates"
+)
 
 func setRouters() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/admin", MustLogin(admin))
 	http.HandleFunc("/admin/login", login)
 	http.HandleFunc("/admin/logout", logout)
-	http.HandleFunc("/admin/list-tags", MustLogin(list_tags))
+	http.HandleFunc("/admin/list-tags", MustLogin(listTags))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("../templates/home.html")
+	fmt.Println("--home--")
+	t, _ := template.ParseFiles(filepath.Join(templatePath, "home.html"))
 	t.Execute(w, nil)
 }
 
 func admin(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("../templates/admin.html")
+	fmt.Println("--admin--")
+	t, _ := template.ParseFiles(filepath.Join(templatePath, "admin.html"))
 	t.Execute(w, nil)
 }
 
-func list_tags(w http.ResponseWriter, r *http.Request) {
-	t, _ := template.ParseFiles("../templates/list-tags.html")
+func listTags(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("--listTags--")
+	t, _ := template.ParseFiles(filepath.Join(templatePath, "list-tags.html"))
 	t.Execute(w, nil)
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	sid, err := globalSesMan.SessionID(r)
+	fmt.Println("--logging out--")
+	sid, err := sessions.SessionsManager.SessionID(r)
 	if err != nil {
 		fmt.Println("logout: couldn't retrieve current session id")
 	}
-	globalSesMan.RemoveSession(sid)
-	globalSesMan.DelSessionCookie(w, r)
+	sessions.SessionsManager.RemoveSession(sid)
+	sessions.SessionsManager.DelSessionCookie(w, r)
 	http.Redirect(w, r, "/admin/login", 302)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-
+	fmt.Println("--login--")
 	if r.Method == "GET" {
-		t, _ := template.ParseFiles("../templates/login.html")
+		t, _ := template.ParseFiles(filepath.Join(templatePath, "login.html"))
 		t.Execute(w, nil)
 	}
 
@@ -61,7 +68,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/admin/login", 302)
 			return
 		}
-		err = globalSesMan.SessionStart(w, r)
+		err = sessions.SessionsManager.SessionStart(w, r)
 		if err != nil {
 			log.Fatal("login router: couldn't start session")
 		}
