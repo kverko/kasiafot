@@ -16,7 +16,7 @@ func setRouters() {
 	http.HandleFunc("/", home)
 	http.HandleFunc("/admin", MustLogin(admin))
 	http.HandleFunc("/admin/login", login)
-	http.HandleFunc("/admin/logout", logout)
+	http.HandleFunc("/admin/logout", MustLogin(logout))
 	http.HandleFunc("/admin/list-tags", MustLogin(listTags))
 }
 
